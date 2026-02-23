@@ -1,30 +1,33 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Sorteador de Stop!</title>
-    <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f2f5; }
-        #letra { font-size: 10rem; font-weight: bold; color: #007bff; margin: 20px; }
-        button { padding: 15px 30px; font-size: 1.5rem; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 8px; transition: 0.2s; }
-        button:hover { background-color: #218838; }
-    </style>
-</head>
-<body>
+<script>
+    let sorteando = false; // Impede cliques duplos enquanto conta
 
-    <h1>Letra do Stop:</h1>
-    <div id="letra">?</div>
-    <button onclick="sortear()">Sortear Letra!</button>
+    function sortear() {
+        if (sorteando) return; 
+        sorteando = true;
 
-    <script>
-        function sortear() {
-            const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const indiceAleatorio = Math.floor(Math.random() * alfabeto.length);
-            const letraSorteada = alfabeto[indiceAleatorio];
-            
-            document.getElementById('letra').innerText = letraSorteada;
-        }
-    </script>
+        const visor = document.getElementById('letra');
+        const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let contagem = 3;
 
-</body>
-</html>
+        // Inicia o suspense
+        visor.innerText = contagem;
+        visor.style.color = "#ffc107"; // Muda para amarelo (espera)
+
+        const cronometro = setInterval(() => {
+            contagem--;
+
+            if (contagem > 0) {
+                visor.innerText = contagem;
+            } else {
+                // Para o cronômetro e sorteia a letra
+                clearInterval(cronometro);
+                
+                const indiceAleatorio = Math.floor(Math.random() * alfabeto.length);
+                visor.innerText = alfabeto[indiceAleatorio];
+                
+                visor.style.color = "#007bff"; // Volta para azul (resultado)
+                sorteando = false;
+            }
+        }, 1000); // Acontece a cada 1 segundo (1000ms)
+    }
+</script>
